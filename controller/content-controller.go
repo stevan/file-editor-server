@@ -12,6 +12,8 @@ import (
     "github.com/stevan/file-editor-server/util"
 
     "github.com/stevan/httpapp"
+    "github.com/stevan/httpapp/middleware/auth"
+    "github.com/stevan/httpapp/middleware/sessions"
 )
 
 func NewContentController (base string) *ContentController {
@@ -96,7 +98,7 @@ func (c *ContentController) handleFile (path string, e *httpapp.Env) *httpapp.Re
 func (c *ContentController) handleFilePOST (path string, e *httpapp.Env) *httpapp.Response {
     f, err := model.CreateVersionedFileModel(path, util.SlurpRequestBody(e))
     if err != nil { panic(err) }
-    f.Commit()
+    c.commitChanges(f, e)
     resp := httpapp.NewResponse(http.StatusNoContent)
     resp.Headers.Add("Location",     e.Request.URL.Path)
     resp.Headers.Add("Content-Type", util.GuessMediaType( f.Name() ))
@@ -120,20 +122,24 @@ func (c *ContentController) handleFileGET (f *model.VersionedFile, e *httpapp.En
 
 func (c *ContentController) handleFilePUT (f *model.VersionedFile, e *httpapp.Env) *httpapp.Response {
     f.Write(util.SlurpRequestBody(e))
-    out := f.Commit()
-    log.Println(out)
+    c.commitChanges(f, e)
     return httpapp.NewResponse(http.StatusNoContent)
 }
 
 func (c *ContentController) handleFileDELETE (f *model.VersionedFile, e *httpapp.Env) *httpapp.Response {
     f.Remove()
-    out := f.Commit()
-    log.Println(out)
+    c.commitChanges(f, e)
     return httpapp.NewResponse(http.StatusNoContent)
 }
 
-
 // utils ...
+
+func (c *ContentController) commitChanges (f *model.VersionedFile, e *httpapp.Env) {
+    session := e.Get("session").(*sessions.Session)
+    user    := session.Data["user"].(*auth.GoogleUser)
+    out     := f.CommitFor(user.AuthorString())
+    log.Print(out)
+}
 
 func (c *ContentController) isDir (path string) bool {
     return filepath.Dir(path) == path
