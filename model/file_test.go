@@ -12,7 +12,7 @@ func TestFileCreate(t *testing.T) {
 
     file_path := filepath.Join(path, "foo.txt")
 
-    file, err := model.CreateFileModel(file_path, "testing")
+    file, err := CreateFileModel(file_path, "testing")
     if err != nil {
         t.Logf("got an error: %s", err)
         t.FailNow()
@@ -37,7 +37,7 @@ func TestFileName(t *testing.T) {
     path, remover := util.CreateFileInTempDir("foo.txt")
     defer remover()
 
-    file, err := model.NewFileModel(path)
+    file, err := NewFileModel(path)
     if err != nil {
         t.Logf("got an error: %s", err)
         t.FailNow()
@@ -52,7 +52,7 @@ func TestFileReadWrite(t *testing.T) {
     path, remover := util.CreateFileInTempDir("foo.txt")
     defer remover()
 
-    file, err := model.NewFileModel(path)
+    file, err := NewFileModel(path)
     if err != nil {
         t.Logf("got an error: %s", err)
         t.FailNow()
@@ -75,7 +75,7 @@ func TestFileRemove(t *testing.T) {
     path, remover := util.CreateFileInTempDir("foo.txt")
     defer remover()
 
-    file, err := model.NewFileModel(path)
+    file, err := NewFileModel(path)
     if err != nil {
         t.Logf("got an error: %s", err)
         t.FailNow()

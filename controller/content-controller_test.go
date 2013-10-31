@@ -16,7 +16,7 @@ func TestDirectoryListing (t *testing.T) {
     path, paths, remover := util.CreatePopulatedTempDir("foo", []string{"bar.txt", "baz.txt"})
     defer remover()
 
-    contentserver := controller.NewContentController( path )
+    contentserver := NewContentController( path )
 
     req, err := http.NewRequest("GET", "http://example.com/", nil)
     if err != nil {
@@ -31,7 +31,7 @@ func TestDirectoryListing (t *testing.T) {
         t.Errorf(util.FormatTestMessage("got wrong status"), w.Code, 200)
     }
 
-    listing := make(directory.DirectoryListing, len(paths))
+    listing := make(model.DirectoryListing, len(paths))
     body    := w.Body.String()
 
     err = json.Unmarshal([]byte(body), &listing)

@@ -77,7 +77,7 @@ func (c *ContentController) handleDirectory (path string, e *httpapp.Env) *httpa
 }
 
 func (c *ContentController) handleFile (path string, e *httpapp.Env) *httpapp.Response {
-    f, err := model.NewFileModel(path)
+    f, err := model.NewVersionedFileModel(path)
     if err != nil { panic(err) }
 
     if e.Request.Method == "GET" {
@@ -94,8 +94,9 @@ func (c *ContentController) handleFile (path string, e *httpapp.Env) *httpapp.Re
 }
 
 func (c *ContentController) handleFilePOST (path string, e *httpapp.Env) *httpapp.Response {
-    f, err := model.CreateFileModel(path, util.SlurpRequestBody(e))
+    f, err := model.CreateVersionedFileModel(path, util.SlurpRequestBody(e))
     if err != nil { panic(err) }
+    f.Commit()
     resp := httpapp.NewResponse(http.StatusNoContent)
     resp.Headers.Add("Location",     e.Request.URL.Path)
     resp.Headers.Add("Content-Type", util.GuessMediaType( f.Name() ))
@@ -110,20 +111,22 @@ func (c *ContentController) handleDirectoryPOST (path string, e *httpapp.Env) *h
 
 // operate on file instances
 
-func (c *ContentController) handleFileGET (f *model.File, e *httpapp.Env) *httpapp.Response {
+func (c *ContentController) handleFileGET (f *model.VersionedFile, e *httpapp.Env) *httpapp.Response {
     resp := httpapp.NewResponse(http.StatusOK)
     resp.Headers.Add("Content-Type", util.GuessMediaType( f.Name() ))
     resp.Body.WriteString(f.Read())
     return resp
 }
 
-func (c *ContentController) handleFilePUT (f *model.File, e *httpapp.Env) *httpapp.Response {
+func (c *ContentController) handleFilePUT (f *model.VersionedFile, e *httpapp.Env) *httpapp.Response {
     f.Write(util.SlurpRequestBody(e))
+    f.Commit()
     return httpapp.NewResponse(http.StatusNoContent)
 }
 
-func (c *ContentController) handleFileDELETE (f *model.File, e *httpapp.Env) *httpapp.Response {
+func (c *ContentController) handleFileDELETE (f *model.VersionedFile, e *httpapp.Env) *httpapp.Response {
     f.Remove()
+    f.Commit()
     return httpapp.NewResponse(http.StatusNoContent)
 }
 

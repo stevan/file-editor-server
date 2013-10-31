@@ -10,7 +10,7 @@ func TestDirectoryName(t *testing.T) {
     path, remover := util.CreateTempDir("foo")
     defer remover()
 
-    directory, err := model.NewDirectoryModel(path)
+    directory, err := NewDirectoryModel(path)
     if err != nil {
         t.Logf("got an error: %s", err)
         t.FailNow()
@@ -25,7 +25,7 @@ func TestEmptyDirectoryListing(t *testing.T) {
     path, remover := util.CreateTempDir("foo")
     defer remover()
 
-    directory, err := model.NewDirectoryModel(path)
+    directory, err := NewDirectoryModel(path)
     if err != nil {
         t.Logf("got an error: %s", err)
         t.FailNow()
@@ -43,7 +43,7 @@ func TestDirectoryListing(t *testing.T) {
     path, paths, remover := util.CreatePopulatedTempDir("foo", []string{"bar.txt", "baz.txt"})
     defer remover()
 
-    directory, err := model.NewDirectoryModel(path)
+    directory, err := NewDirectoryModel(path)
     if err != nil {
         t.Logf("got an error: %s", err)
         t.FailNow()
