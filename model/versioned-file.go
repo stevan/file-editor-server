@@ -48,8 +48,8 @@ func (handle *VersionedFile) CommitFor (author string) string {
 
     working_dir := filepath.Dir(handle.Name())
 
-    if handle.is_new {
-        cmd      := exec.Command("git", "add", "--author", author, handle.Name())
+    if handle.is_new == true {
+        cmd      := exec.Command("git", "add", handle.Name())
         cmd.Dir   = working_dir
         out, err := cmd.CombinedOutput()
         all_out = all_out + string(out)
