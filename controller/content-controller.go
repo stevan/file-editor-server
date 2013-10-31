@@ -3,7 +3,7 @@ package controller
 import (
     "fmt"
     "os"
-    //"log"
+    "log"
     "path/filepath"
     "net/http"
 
@@ -120,13 +120,15 @@ func (c *ContentController) handleFileGET (f *model.VersionedFile, e *httpapp.En
 
 func (c *ContentController) handleFilePUT (f *model.VersionedFile, e *httpapp.Env) *httpapp.Response {
     f.Write(util.SlurpRequestBody(e))
-    f.Commit()
+    out := f.Commit()
+    log.Println(out)
     return httpapp.NewResponse(http.StatusNoContent)
 }
 
 func (c *ContentController) handleFileDELETE (f *model.VersionedFile, e *httpapp.Env) *httpapp.Response {
     f.Remove()
-    f.Commit()
+    out := f.Commit()
+    log.Println(out)
     return httpapp.NewResponse(http.StatusNoContent)
 }
 
