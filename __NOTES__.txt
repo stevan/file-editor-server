@@ -1,0 +1,9 @@
+https://developers.google.com/accounts/docs/OAuth2Login
+http://code.google.com/p/goauth2/source/browse/oauth/example/oauthreq.go
+http://godoc.org/code.google.com/p/goauth2/oauth
+https://gist.github.com/border/3579615
+
+https://github.com/emicklei/go-restful
+
+
+https://github.com/globocom/gandalf/blob/master/bin/gandalf.go#L103
