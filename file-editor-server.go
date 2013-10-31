@@ -2,6 +2,7 @@ package main
 
 import (
     "os"
+    "fmt"
     "flag"
     "net/http"
 
@@ -44,7 +45,7 @@ func main() {
                         auth.CreateGoogleOAuthConfig(
                             os.Getenv("DD_OAUTH_CLIENT_ID"),
                             os.Getenv("DD_OAUTH_CLIENT_SECRET"),
-                            "http://" + *host + ":" + *port + "/oauth2callback",
+                            fmt.Sprintf(os.Getenv("DD_OAUTH_CALLBACK_FORMAT"), *host, *port),
                             os.Getenv("DD_OAUTH_CACHE_FILE"),
                         ),
                     ),
