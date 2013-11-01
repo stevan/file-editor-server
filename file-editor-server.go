@@ -32,6 +32,7 @@ func main() {
 
 	urlmap := component.URLMapper()
 
+	urlmap.AddApplication("/", component.Redirect("/editor/"))
 	urlmap.AddApplication("/editor/", component.ServeFiles(os.Getenv("DD_EDITOR_ROOT")))
 	urlmap.AddApplication("/data/", controller.NewContentController(os.Getenv("DD_DATA_ROOT")))
 
