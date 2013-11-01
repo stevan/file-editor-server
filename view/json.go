@@ -1,18 +1,19 @@
 package view
 
 import (
-    "encoding/json"
+	"encoding/json"
 )
 
-func NewJSONView () *JSONView {
-    return new(JSONView)
+func NewJSONView() *JSONView {
+	return new(JSONView)
 }
 
-type JSONView struct {}
+type JSONView struct{}
 
-func (v *JSONView) Render (data interface {}) []byte {
-    json, err := json.MarshalIndent(data, "", "  ")
-    if err != nil { panic(err) }
-    return json
+func (v *JSONView) Render(data interface{}) []byte {
+	json, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	return json
 }
-
